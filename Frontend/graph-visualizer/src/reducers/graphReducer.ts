@@ -34,14 +34,21 @@ const graphSlice = createSlice({
       state.present = action.payload;
     },
     updateNodeColor: (state, action: PayloadAction<{ id: string; color: string }>) => {
-      state.past.push([...state.present]); // Save history
-      state.future = []; // Clear redo history
-
-      const node = state.present.find((n) => n.id === action.payload.id);
-      if (node) {
-        node.style.backgroundColor = action.payload.color;
+      state.past.push([...state.present]);
+      state.future = [];
+    
+      const nodeIndex = state.present.findIndex((n) => n.id === action.payload.id);
+      if (nodeIndex !== -1) {
+        state.present[nodeIndex] = {
+          ...state.present[nodeIndex],
+          style: {
+            ...state.present[nodeIndex].style,
+            backgroundColor: action.payload.color,
+          },
+        };
       }
     },
+    
     updateNodeFontSize: (state, action: PayloadAction<{ id: string; fontSize: number }>) => {
       state.past.push([...state.present]);
       state.future = [];

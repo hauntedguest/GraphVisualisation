@@ -25,7 +25,7 @@ const initialEdges: Edge[] = Array.from({ length: 10 }, (_, i) => ({
 
 const GraphContainer: React.FC = () => {
   const dispatch = useDispatch();
-  const nodes = useSelector((state: RootState) => state.graph.present);
+  const nodes = useSelector((state: RootState) => state.graph.present, (prev, next) => prev === next);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {

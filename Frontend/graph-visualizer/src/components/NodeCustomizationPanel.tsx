@@ -75,4 +75,4 @@ const NodeCustomizationPanel: React.FC = () => {
   );
 };
 
-export default NodeCustomizationPanel;
+export default React.memo(NodeCustomizationPanel);

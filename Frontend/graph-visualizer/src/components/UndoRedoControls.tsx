@@ -32,4 +32,4 @@ const UndoRedoControls: React.FC = () => {
   );
 };
 
-export default UndoRedoControls;
+export default React.memo(UndoRedoControls);
