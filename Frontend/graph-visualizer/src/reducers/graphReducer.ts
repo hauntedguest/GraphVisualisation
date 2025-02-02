@@ -2,50 +2,75 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface NodeData {
   id: string;
-  label: string;
-  color: string;
-  fontSize: number;
+  position: { x: number; y: number };
+  data: { label: string };
+  style: { backgroundColor: string; fontSize: number };
 }
 
 interface GraphState {
-  nodes: NodeData[];
-  selectedNode: NodeData | null;
+  past: NodeData[][];
+  present: NodeData[];
+  future: NodeData[][];
 }
 
-const initialState: GraphState = {
-  nodes: Array.from({ length: 10 }, (_, i) => ({
-    id: `${i + 1}`,
-    label: `Node ${i + 1}`,
-    color: "#ffffff",  // Default white color
-    fontSize: 14,      // Default font size
-  })),
-  selectedNode: null,
-};
+const initialNodes: NodeData[] = Array.from({ length: 10 }, (_, i) => ({
+  id: `${i + 1}`,
+  position: { x: Math.random() * 400, y: Math.random() * 400 },
+  data: { label: `Node ${i + 1}` },
+  style: { backgroundColor: "#ffffff", fontSize: 16 },
+}));
 
+const initialState: GraphState = {
+  past: [],
+  present: initialNodes,
+  future: [],
+};
 
 const graphSlice = createSlice({
   name: "graph",
   initialState,
   reducers: {
     setNodes: (state, action: PayloadAction<NodeData[]>) => {
-      state.nodes = action.payload;
+      state.present = action.payload;
     },
-    selectNode: (state, action: PayloadAction<string>) => {
-      state.selectedNode = state.nodes.find((node) => node.id === action.payload) || null;
-    },
-    updateNodeStyle: (
-      state,
-      action: PayloadAction<{ id: string; color?: string; fontSize?: number }>
-    ) => {
-      const node = state.nodes.find((n) => n.id === action.payload.id);
+    updateNodeColor: (state, action: PayloadAction<{ id: string; color: string }>) => {
+      state.past.push([...state.present]); // Save history
+      state.future = []; // Clear redo history
+
+      const node = state.present.find((n) => n.id === action.payload.id);
       if (node) {
-        if (action.payload.color) node.color = action.payload.color;
-        if (action.payload.fontSize) node.fontSize = action.payload.fontSize;
-        state.selectedNode = { ...node };
+        node.style.backgroundColor = action.payload.color;
+      }
+    },
+    updateNodeFontSize: (state, action: PayloadAction<{ id: string; fontSize: number }>) => {
+      state.past.push([...state.present]);
+      state.future = [];
+
+      const node = state.present.find((n) => n.id === action.payload.id);
+      if (node) {
+        node.style.fontSize = action.payload.fontSize;
+      }
+    },
+    undo: (state) => {
+      if (state.past.length > 0) {
+        const previousState = state.past.pop();
+        if (previousState) {
+          state.future.unshift([...state.present]); // Save redo state
+          state.present = previousState;
+        }
+      }
+    },
+    redo: (state) => {
+      if (state.future.length > 0) {
+        const nextState = state.future.shift();
+        if (nextState) {
+          state.past.push([...state.present]); // Save to past
+          state.present = nextState;
+        }
       }
     },
   },
 });
 
-export const { setNodes, selectNode, updateNodeStyle } = graphSlice.actions;
+export const { setNodes, updateNodeColor, updateNodeFontSize, undo, redo } = graphSlice.actions;
 export default graphSlice.reducer;
