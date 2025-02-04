@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import graphReducer from "./reducers/graphReducer";
+import graphReducer from "./reducers/graphReducer.js";
 
 const store = configureStore({
   reducer: {

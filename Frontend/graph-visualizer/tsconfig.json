@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": ["es2015", "dom"],  // Add this line to support modern JavaScript features
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]

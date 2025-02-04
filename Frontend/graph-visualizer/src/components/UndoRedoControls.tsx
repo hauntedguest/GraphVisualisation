@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { undo, redo } from "../reducers/graphReducer";
+import { RootState } from "../store.js";
+import { undo, redo } from "../reducers/graphReducer.js";
 import { Button } from "@mui/material";
 
 const UndoRedoControls: React.FC = () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { updateNodeColor, updateNodeFontSize } from "../reducers/graphReducer";
+import { RootState } from "../store.js";
+import { updateNodeColor, updateNodeFontSize } from "../reducers/graphReducer.js";
 import { SketchPicker } from "react-color";
 import { Slider, Select, MenuItem } from "@mui/material";
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ReactFlow, {
+import  {
   Background,
   Controls,
   MiniMap,
@@ -10,12 +10,14 @@ import ReactFlow, {
   NodeChange,
   applyNodeChanges,
   useEdgesState,
+  ReactFlowProvider,
+  ReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import NodeCustomizationPanel from "./NodeCustomizationPanel";
-import UndoRedoControls from "./UndoRedoControls";
-import { RootState } from "../store";
-import { setNodes } from "../reducers/graphReducer";
+import NodeCustomizationPanel from "./NodeCustomizationPanel.js";
+import UndoRedoControls from "./UndoRedoControls.js";
+import { RootState } from "../store.js";
+import { setNodes } from "../reducers/graphReducer.js";
 
 const initialEdges: Edge[] = Array.from({ length: 10 }, (_, i) => ({
   id: `e${i}-${i + 1}`,
@@ -47,18 +49,20 @@ const GraphContainer: React.FC = () => {
   return (
     <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
       <div style={{ flex: 1 }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}  // ✅ Allow nodes to move
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-        >
-          <MiniMap />
-          <Controls />
-          <Background />
-        </ReactFlow>
+        <ReactFlowProvider>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}  // ✅ Allow nodes to move
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              fitView
+            >
+              <MiniMap />
+              <Controls />
+              <Background />
+            </ReactFlow>
+          </ReactFlowProvider>
       </div>
       <div>
         <NodeCustomizationPanel />
